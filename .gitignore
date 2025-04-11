@@ -1,0 +1,4 @@
+flask_frontend/venv
+fastapi_backend/venv
+flask_frontend/__pycache__/
+fastapi_backend/__pycache__/

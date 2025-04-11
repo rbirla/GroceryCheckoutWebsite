@@ -1,0 +1,8 @@
+[
+    { "name": "Apple", "price": 1.25, "category": "Fruits" },
+    { "name": "Banana", "price": 0.75, "category": "Fruits" },
+    { "name": "Carrot", "price": 0.99, "category": "Vegetables" },
+    { "name": "Broccoli", "price": 1.50, "category": "Vegetables" },
+    { "name": "Milk", "price": 2.99, "category": "Dairy" },
+    { "name": "Bread", "price": 3.49, "category": "Bakery" }
+]
