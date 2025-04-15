@@ -1,0 +1,8 @@
+[
+    { "name": "Apple", "price": 1.25, "category": "Fruits", "image_url": "https://images.pexels.com/photos/2487443/pexels-photo-2487443.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "source": "" },
+    { "name": "Banana", "price": 0.75, "category": "Fruits", "image_url": "https://b3194544.smushcdn.com/3194544/wp-content/uploads/2023/09/Del-Monte-Commercial-Refrigeration-768x432.png?lossy=2&strip=1&webp=1", "source": "" },
+    { "name": "Carrot", "price": 0.99, "category": "Vegetables", "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Carrots_-_Daucus_carota_subsp._sativus.jpg", "source": "" },
+    { "name": "Broccoli", "price": 1.50, "category": "Vegetables", "image_url": "https://live.staticflickr.com/2780/4238856801_bedee819b7.jpg", "source": "" },
+    { "name": "Milk", "price": 2.99, "category": "Dairy", "image_url": "https://live.staticflickr.com/65535/53788961991_1631e03d72_b.jpg", "source": "" },
+    { "name": "Bread", "price": 3.49, "category": "Bakery", "image_url": "https://img.freepik.com/free-photo/close-up-view-breads-as-cob-baguette-with-white-bread-slices-wooden-background_141793-5220.jpg?semt=ais_country_boost&w=740", "source": "" }
+]

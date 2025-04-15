@@ -1,7 +1,7 @@
 import json
 import os
-from ..db.database import SessionLocal
-from ..models.models import FoodItem, Category
+from db.database import SessionLocal
+from models.models import FoodItem, Category
 
 def seed_food_items():
     db = SessionLocal()
@@ -19,7 +19,8 @@ def seed_food_items():
                 db.add(FoodItem(
                     name=item["name"],
                     price=item["price"],
-                    category_id=category.id
+                    category_id=category.id,
+                    image_url=item["image_url"],
                 ))
 
     db.commit()
