@@ -22,11 +22,13 @@ def get_all_food_items(category: str = Query(None), db: Session = Depends(get_db
 
     items = query.all()
     return [
-        {
-            "id": item.id,
-            "name": item.name,
-            "price": item.price,
-            "image_url": item.image_url,
-            "category": item.category.name if item.category else None
-        } for item in items
-    ]
+    {
+        "id": item.id,
+        "name": item.name,
+        "price": item.price,
+        "image_url": item.image_url,
+        "description": item.description,
+        "ingredients": item.ingredients.split(", ") if item.ingredients else [],
+        "category": item.category.name if item.category else None
+    } for item in items
+]

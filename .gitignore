@@ -1,4 +1,10 @@
-flask_frontend/venv
-fastapi_backend/venv
-flask_frontend/__pycache__/
-fastapi_backend/__pycache__/
+# Ignore virtual environments
+flask_frontend/venv/
+fastapi_backend/venv/
+
+# Ignore ALL __pycache__ folders recursively
+__pycache__/
+**/__pycache__/
+
+# Ignore Python compiled files
+*.pyc

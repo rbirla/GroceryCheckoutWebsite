@@ -4,6 +4,8 @@ from app.models import User, Product
 from app.forms import RegistrationForm, LoginForm
 from app import login_manager, db
 import requests
+import random
+
 
 routes_bp = Blueprint('routes', __name__)
 
@@ -70,12 +72,25 @@ def dashboard():
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
+
 @routes_bp.route('/products/<int:product_id>')
 def product_detail(product_id):
     try:
-        response = requests.get(f"http://localhost:8000/food-items/{product_id}")
-        product = response.json()
+        response = requests.get("http://localhost:8000/food-items/")
+        items = response.json()
+
+        product = next((item for item in items if item["id"] == product_id), None)
+        if not product:
+            return "Product not found", 404
+
+        # Find similar items from the same category
+        same_category = [item for item in items if item["category"] == product["category"] and item["id"] != product["id"]]
+        random.shuffle(same_category)
+        related_items = same_category[:5]
+
+        return render_template("product_detail.html", product=product, related_items=related_items)
+
     except Exception as e:
         print("Failed to fetch product:", e)
-        product = None
-    return render_template('product_detail.html', product=product)
+        return "Error loading product", 500

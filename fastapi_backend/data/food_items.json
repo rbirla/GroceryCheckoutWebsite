@@ -1,31 +1,317 @@
 [
-    { "name": "Apple", "price": 1.25, "category": "Fruits", "image_url": "https://images.pexels.com/photos/2487443/pexels-photo-2487443.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "source": "" },
-    { "name": "Banana", "price": 0.75, "category": "Fruits", "image_url": "https://b3194544.smushcdn.com/3194544/wp-content/uploads/2023/09/Del-Monte-Commercial-Refrigeration-768x432.png?lossy=2&strip=1&webp=1", "source": "" },
-    { "name": "Carrot", "price": 0.99, "category": "Vegetables", "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Carrots_-_Daucus_carota_subsp._sativus.jpg", "source": "" },
-    { "name": "Broccoli", "price": 1.50, "category": "Vegetables", "image_url": "https://live.staticflickr.com/2780/4238856801_bedee819b7.jpg", "source": "" },
-    { "name": "Milk", "price": 2.99, "category": "Dairy", "image_url": "https://live.staticflickr.com/65535/53788961991_1631e03d72_b.jpg", "source": "" },
-    { "name": "Bread", "price": 3.49, "category": "Bakery", "image_url": "https://img.freepik.com/free-photo/close-up-view-breads-as-cob-baguette-with-white-bread-slices-wooden-background_141793-5220.jpg?semt=ais_country_boost&w=740", "source": "" },
-    {"name": "English Cucumber", "price": 1.25, "category": "Vegetables", "image_url": "", "source": "https://product-images.metro.ca/images/ha1/hf5/10916746493982.jpg" },
-    { "name": "White Mushrooms", "price": 2.50, "category": "Vegetables", "image_url": "https://product-images.metro.ca/images/h6f/hbf/11415513038878.jpg", "source": "" },
-    { "name": "Green Grapes", "price": 3.75, "category": "Fruits", "image_url": "https://product-images.metro.ca/images/hb3/h70/8874218094622.jpg", "source": "" },
-    { "name": "Red Seedless Grapes", "price": 3.99, "category": "Fruits", "image_url": "https://product-images.metro.ca/images/ha7/h94/8872792391710.jpg", "source": "" },
-    { "name": "Baby spinach", "price": 2.79, "category": "Vegetables", "image_url": "https://product-images.metro.ca/images/h97/h60/14266226769950.jpg", "source": "" },
-    { "name": "Sweet Potato", "price": 1.99, "category": "Vegetables", "image_url": "https://product-images.metro.ca/images/hde/hcf/8874212360222.jpg", "source": "" },
-    { "name": "Local Yellow Onion", "price": 1.46, "category": "Vegetables", "image_url": "https://product-images.metro.ca/images/h25/h86/8858905903134.jpg", "source": "" },
-    { "name": "Blueberries", "price": 2.99, "category": "Fruits", "image_url": "https://product-images.metro.ca/images/hf4/hbd/12934178078750.jpg", "source": "" },
-    { "name": "Cauliflower", "price": 3.99, "category": "Vegetables", "image_url": "https://product-images.metro.ca/images/h7c/h2e/8897128562718.jpg", "source": "" },
-    { "name": "Medium Cheddar Cheese Sticks", "price": 6.49, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hed/h40/14321321574430.jpg", "source": "" },
-    { "name": "Pizza Mozzarella Cheese Sticks, Cheesetrings", "price": 6.49, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/h5f/hc7/14321304633374.jpg", "source": "" },
-    { "name": "Marble Mozzarella Swirls Cheese Sticks", "price": 6.48, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/h14/h10/13653937979422.jpg", "source": "" },
-    { "name": "Cheese Croissant", "price": 5.99, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hc9/h43/13505471479838.jpg", "source": "" },
-    { "name": "Emmental Cheese Slices", "price": 8.99, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hed/h83/12942253326366.jpg", "source": "" },
-    { "name": "Pizza Flavoured Cheese Stick", "price": 10.99, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hed/h83/12942253326366.jpg", "source": "" },
-    { "name": "Jalapeño Flavoured Pizza Mozzarella Cheese Sticks", "price": 6.49, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hcb/h6f/14321352572958.jpg", "source": "" },
-    { "name": "Cheddar Flavoured Pizza Mozzarella Cheese Sticks", "price": 6.49, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hf2/h03/14321321181214.jpg", "source": "" },
-    { "name": "Marble Pizza Mozzarella Cheese Sticks With Probiotics", "price": 6.49, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hf1/h83/14321343201310.jpg", "source": "" },
-    { "name": "Frozen Bacon And Cheddar Battered Cheese Sticks", "price": 6.99, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/h49/h52/13384465580062.jpg", "source": "" },
-    { "name": "Frozen Battered Mozzarella And Jalapeño Cheese Sticks", "price": 6.99, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hde/hec/13384463810590.jpg", "source": "" }
-
-    
-
+    {
+        "name": "Apple",
+        "price": 1.25,
+        "category": "Fruits",
+        "image_url": "https://images.pexels.com/photos/2487443/pexels-photo-2487443.jpeg",
+        "description": "A crisp, sweet red apple that's great for snacking or baking.",
+        "ingredients": [
+            "Apple"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Banana",
+        "price": 0.75,
+        "category": "Fruits",
+        "image_url": "https://b3194544.smushcdn.com/3194544/wp-content/uploads/2023/09/Del-Monte-Commercial-Refrigeration-768x432.png",
+        "description": "Naturally sweet and rich in potassium, perfect for smoothies or snacks.",
+        "ingredients": [
+            "Banana"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Carrot",
+        "price": 0.99,
+        "category": "Vegetables",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Carrots_-_Daucus_carota_subsp._sativus.jpg",
+        "description": "Crunchy, vibrant carrots loaded with vitamin A.",
+        "ingredients": [
+            "Carrot"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Broccoli",
+        "price": 1.5,
+        "category": "Vegetables",
+        "image_url": "https://live.staticflickr.com/2780/4238856801_bedee819b7.jpg",
+        "description": "Fresh broccoli crowns packed with fiber and antioxidants.",
+        "ingredients": [
+            "Broccoli"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Milk",
+        "price": 2.99,
+        "category": "Dairy",
+        "image_url": "https://live.staticflickr.com/65535/53788961991_1631e03d72_b.jpg",
+        "description": "Classic whole milk, perfect for drinking, baking, or cooking.",
+        "ingredients": [
+            "Milk",
+            "Vitamin D3"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Bread",
+        "price": 3.49,
+        "category": "Bakery",
+        "image_url": "https://img.freepik.com/free-photo/close-up-view-breads-as-cob-baguette-with-white-bread-slices-wooden-background_141793-5220.jpg",
+        "description": "Freshly baked bread, soft inside with a golden crust.",
+        "ingredients": [
+            "Wheat flour",
+            "Yeast",
+            "Salt",
+            "Water"
+        ],
+        "source": ""
+    },
+    {
+        "name": "English Cucumber",
+        "price": 1.25,
+        "category": "Vegetables",
+        "image_url": "https://product-images.metro.ca/images/ha1/hf5/10916746493982.jpg",
+        "description": "Long, crisp English cucumber ideal for salads and snacking.",
+        "ingredients": [
+            "Cucumber"
+        ],
+        "source": ""
+    },
+    {
+        "name": "White Mushrooms",
+        "price": 2.5,
+        "category": "Vegetables",
+        "image_url": "https://product-images.metro.ca/images/h6f/hbf/11415513038878.jpg",
+        "description": "Mild and earthy mushrooms perfect for saut\u00e9ing or pizza toppings.",
+        "ingredients": [
+            "White mushrooms"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Green Grapes",
+        "price": 3.75,
+        "category": "Fruits",
+        "image_url": "https://product-images.metro.ca/images/hb3/h70/8874218094622.jpg",
+        "description": "Sweet, seedless green grapes \u2014 great for snacking or freezing.",
+        "ingredients": [
+            "Grapes"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Red Seedless Grapes",
+        "price": 3.99,
+        "category": "Fruits",
+        "image_url": "https://product-images.metro.ca/images/ha7/h94/8872792391710.jpg",
+        "description": "Juicy red grapes with no seeds and a hint of tartness.",
+        "ingredients": [
+            "Grapes"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Baby spinach",
+        "price": 2.79,
+        "category": "Vegetables",
+        "image_url": "https://www.earthboundfarm.com/wp-content/uploads/2024/04/BabySpinach-Half-16oz-Mockup.jpg",
+        "description": "Tender, nutrient-rich baby spinach leaves, perfect for salads and smoothies.",
+        "ingredients": [
+            "Spinach"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Sweet Potato",
+        "price": 1.99,
+        "category": "Vegetables",
+        "image_url": "https://cdn.media.amplience.net/i/japancentre/recipe-1668-japanese-baked-sweet-potato/Japanese-baked-sweet-potato?$poi$&w=700&h=410&sm=c&fmt=auto",
+        "description": "Naturally sweet and packed with fiber, great for roasting or mashing.",
+        "ingredients": [
+            "Sweet potato"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Local Yellow Onion",
+        "price": 1.46,
+        "category": "Vegetables",
+        "image_url": "https://product-images.metro.ca/images/h3b/h43/8858907410462.jpg",
+        "description": "Sharp and flavorful yellow onions grown locally.",
+        "ingredients": [
+            "Yellow onion"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Blueberries",
+        "price": 2.99,
+        "category": "Fruits",
+        "image_url": "https://nwwildfoods.com/cdn/shop/articles/blueberries_blog.png?v=1698967678",
+        "description": "Sweet, antioxidant-rich blueberries great for snacking or baking.",
+        "ingredients": [
+            "Blueberries"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Cauliflower",
+        "price": 3.99,
+        "category": "Vegetables",
+        "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSungRAJWDJxxBLqxccucPcwq8YZ0P7P6k34Q&s",
+        "description": "Fresh cauliflower head, versatile for roasting, mashing or ricing.",
+        "ingredients": [
+            "Cauliflower"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Medium Cheddar Cheese Sticks",
+        "price": 6.49,
+        "category": "Dairy",
+        "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStkMegdK7ccrxgMcq0TXfpxReP-d1Y8a-pgg&s",
+        "description": "Creamy and tangy cheddar cheese sticks perfect for lunchboxes.",
+        "ingredients": [
+            "Cheddar cheese",
+            "Milk",
+            "Salt",
+            "Enzymes"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Pizza Mozzarella Cheese Sticks, Cheesetrings",
+        "price": 6.49,
+        "category": "Dairy",
+        "image_url": "https://product-images.metro.ca/images/hd2/ha9/14321355259934.jpg",
+        "description": "Fun, peelable mozzarella cheese sticks with a pizza twist.",
+        "ingredients": [
+            "Mozzarella cheese",
+            "Natural flavors"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Marble Mozzarella Swirls Cheese Sticks",
+        "price": 6.48,
+        "category": "Dairy",
+        "image_url": "https://product-images.metro.ca/images/h1d/hf4/8833784086558.jpg",
+        "description": "Swirled white and orange cheese sticks that kids love.",
+        "ingredients": [
+            "Cheddar cheese",
+            "Mozzarella cheese",
+            "Coloring (Annatto)"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Cheese Croissant",
+        "price": 5.99,
+        "category": "Dairy",
+        "image_url": "https://lacasadolce.ca/cdn/shop/products/CHEESE_a9881f54-321b-4645-a41d-aecf31a6d0bc.jpg?v=1663601680",
+        "description": "Flaky croissant filled with creamy cheese, perfect for breakfast.",
+        "ingredients": [
+            "Wheat flour",
+            "Butter",
+            "Cheese",
+            "Milk",
+            "Eggs"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Emmental Cheese Slices",
+        "price": 8.99,
+        "category": "Dairy",
+        "image_url": "https://www.supermarchepa.com/cdn/shop/files/president-emmental-cheese-slices-150g_medium.jpg?v=1728656744",
+        "description": "Mild and nutty Emmental cheese slices ideal for sandwiches.",
+        "ingredients": [
+            "Emmental cheese",
+            "Milk",
+            "Salt",
+            "Cultures"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Pizza Flavoured Cheese Stick",
+        "price": 10.99,
+        "category": "Dairy",
+        "image_url": "https://iwashyoudry.com/wp-content/uploads/2018/11/Cheesy-Pepperoni-Pizza-Sticks-6-copy-500x500.jpg",
+        "description": "A savory blend of cheese and pizza seasoning in a fun stick.",
+        "ingredients": [
+            "Cheddar cheese",
+            "Pizza seasoning",
+            "Salt"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Jalape\u00f1o Flavoured Pizza Mozzarella Cheese Sticks",
+        "price": 6.49,
+        "category": "Dairy",
+        "image_url": "https://product-images.metro.ca/images/hb5/h8e/13384464826398.jpg",
+        "description": "Mozzarella sticks with a spicy jalape\u00f1o twist for extra flavor.",
+        "ingredients": [
+            "Mozzarella cheese",
+            "Jalape\u00f1o flavoring"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Cheddar Flavoured Pizza Mozzarella Cheese Sticks",
+        "price": 6.49,
+        "category": "Dairy",
+        "image_url": "https://natashaskitchen.com/wp-content/uploads/2023/05/Cheese-Sticks-SQ.jpg",
+        "description": "Smooth mozzarella cheese sticks with a sharp cheddar finish.",
+        "ingredients": [
+            "Mozzarella cheese",
+            "Cheddar flavor",
+            "Salt"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Marble Pizza Mozzarella Cheese Sticks With Probiotics",
+        "price": 6.49,
+        "category": "Dairy",
+        "image_url": "https://product-images.metro.ca/images/h44/h5e/14321343954974.jpg",
+        "description": "Colorful cheese sticks packed with probiotics for gut health.",
+        "ingredients": [
+            "Mozzarella cheese",
+            "Probiotic cultures",
+            "Milk"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Frozen Bacon And Cheddar Battered Cheese Sticks",
+        "price": 6.99,
+        "category": "Dairy",
+        "image_url": "https://product-images.metro.ca/images/h26/hbc/13384466628638.jpg",
+        "description": "Crispy battered cheese sticks infused with bacon and cheddar.",
+        "ingredients": [
+            "Cheddar cheese",
+            "Bacon bits",
+            "Breadcrumb coating"
+        ],
+        "source": ""
+    },
+    {
+        "name": "Frozen Battered Mozzarella And Jalape\u00f1o Cheese Sticks",
+        "price": 6.99,
+        "category": "Dairy",
+        "image_url": "https://tb-static.uber.com/prod/image-proc/processed_images/aaec1a87ebbc73eaef5570eb4690b23e/0e5313be7a8831b8ed60f8dab3c2df10.jpeg",
+        "description": "Spicy jalape\u00f1o and creamy mozzarella in a crunchy coating.",
+        "ingredients": [
+            "Mozzarella cheese",
+            "Jalape\u00f1o",
+            "Wheat flour",
+            "Oil"
+        ],
+        "source": ""
+    }
 ]

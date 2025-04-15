@@ -20,8 +20,11 @@ def seed_food_items():
                     name=item["name"],
                     price=item["price"],
                     category_id=category.id,
-                    image_url=item["image_url"],
-                ))
+                    image_url=item.get("image_url"),
+                    description=item.get("description", ""),
+                    ingredients=", ".join(item.get("ingredients", []))  # converts list to comma-separated string
+))
+
 
     db.commit()
     db.close()

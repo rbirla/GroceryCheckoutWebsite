@@ -16,5 +16,8 @@ class FoodItem(Base):
     price = Column(Float)
     image_url = Column(String)
     category_id = Column(Integer, ForeignKey("categories.id"))
+    description = Column(String)
+    ingredients = Column(String)  
+
 
     category = relationship("Category", back_populates="food_items")
