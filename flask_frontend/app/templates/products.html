@@ -5,9 +5,15 @@
 {% block content %}
 <h1 class="mb-4">Our Products</h1>
 
+<<<<<<< HEAD
 <form class="mb-4">
     <input type="text" class="form-control" placeholder="Search for fruits, veggies, or dairy...">
 </form>
+=======
+    <form class="mb-4" method="GET" action="{{ url_for('routes.products') }}">
+        <input type="text" class="form-control" placeholder="Search for fruits, veggies, or dairy...", value="{{ request.args.get('category', '') }}", name="category">
+    </form>
+>>>>>>> 97d79d54bf90b26587a936dc2c34e2252e4d4741
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
     {% for item in items %}

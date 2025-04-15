@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from db.database import SessionLocal
 from models import models
@@ -13,8 +13,14 @@ def get_db():
         db.close()
 
 @router.get("/")
-def get_all_food_items(db: Session = Depends(get_db)):
-    items = db.query(models.FoodItem).all()
+def get_all_food_items(category: str = Query(None), db: Session = Depends(get_db)):
+    query = db.query(models.FoodItem)
+
+    if category:
+        category = category.strip().capitalize()
+        query = query.join(models.Category).filter(models.Category.name == category)
+
+    items = query.all()
     return [
         {
             "id": item.id,
