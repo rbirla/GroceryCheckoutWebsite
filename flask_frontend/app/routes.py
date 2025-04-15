@@ -68,3 +68,13 @@ def dashboard():
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+@routes_bp.route('/products/<int:product_id>')
+def product_detail(product_id):
+    try:
+        response = requests.get(f"http://localhost:8000/food-items/{product_id}")
+        product = response.json()
+    except Exception as e:
+        print("Failed to fetch product:", e)
+        product = None
+    return render_template('product_detail.html', product=product)

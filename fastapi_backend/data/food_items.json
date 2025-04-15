@@ -4,5 +4,28 @@
     { "name": "Carrot", "price": 0.99, "category": "Vegetables", "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Carrots_-_Daucus_carota_subsp._sativus.jpg", "source": "" },
     { "name": "Broccoli", "price": 1.50, "category": "Vegetables", "image_url": "https://live.staticflickr.com/2780/4238856801_bedee819b7.jpg", "source": "" },
     { "name": "Milk", "price": 2.99, "category": "Dairy", "image_url": "https://live.staticflickr.com/65535/53788961991_1631e03d72_b.jpg", "source": "" },
-    { "name": "Bread", "price": 3.49, "category": "Bakery", "image_url": "https://img.freepik.com/free-photo/close-up-view-breads-as-cob-baguette-with-white-bread-slices-wooden-background_141793-5220.jpg?semt=ais_country_boost&w=740", "source": "" }
+    { "name": "Bread", "price": 3.49, "category": "Bakery", "image_url": "https://img.freepik.com/free-photo/close-up-view-breads-as-cob-baguette-with-white-bread-slices-wooden-background_141793-5220.jpg?semt=ais_country_boost&w=740", "source": "" },
+    {"name": "English Cucumber", "price": 1.25, "category": "Vegetables", "image_url": "", "source": "https://product-images.metro.ca/images/ha1/hf5/10916746493982.jpg" },
+    { "name": "White Mushrooms", "price": 2.50, "category": "Vegetables", "image_url": "https://product-images.metro.ca/images/h6f/hbf/11415513038878.jpg", "source": "" },
+    { "name": "Green Grapes", "price": 3.75, "category": "Fruits", "image_url": "https://product-images.metro.ca/images/hb3/h70/8874218094622.jpg", "source": "" },
+    { "name": "Red Seedless Grapes", "price": 3.99, "category": "Fruits", "image_url": "https://product-images.metro.ca/images/ha7/h94/8872792391710.jpg", "source": "" },
+    { "name": "Baby spinach", "price": 2.79, "category": "Vegetables", "image_url": "https://product-images.metro.ca/images/h97/h60/14266226769950.jpg", "source": "" },
+    { "name": "Sweet Potato", "price": 1.99, "category": "Vegetables", "image_url": "https://product-images.metro.ca/images/hde/hcf/8874212360222.jpg", "source": "" },
+    { "name": "Local Yellow Onion", "price": 1.46, "category": "Vegetables", "image_url": "https://product-images.metro.ca/images/h25/h86/8858905903134.jpg", "source": "" },
+    { "name": "Blueberries", "price": 2.99, "category": "Fruits", "image_url": "https://product-images.metro.ca/images/hf4/hbd/12934178078750.jpg", "source": "" },
+    { "name": "Cauliflower", "price": 3.99, "category": "Vegetables", "image_url": "https://product-images.metro.ca/images/h7c/h2e/8897128562718.jpg", "source": "" },
+    { "name": "Medium Cheddar Cheese Sticks", "price": 6.49, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hed/h40/14321321574430.jpg", "source": "" },
+    { "name": "Pizza Mozzarella Cheese Sticks, Cheesetrings", "price": 6.49, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/h5f/hc7/14321304633374.jpg", "source": "" },
+    { "name": "Marble Mozzarella Swirls Cheese Sticks", "price": 6.48, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/h14/h10/13653937979422.jpg", "source": "" },
+    { "name": "Cheese Croissant", "price": 5.99, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hc9/h43/13505471479838.jpg", "source": "" },
+    { "name": "Emmental Cheese Slices", "price": 8.99, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hed/h83/12942253326366.jpg", "source": "" },
+    { "name": "Pizza Flavoured Cheese Stick", "price": 10.99, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hed/h83/12942253326366.jpg", "source": "" },
+    { "name": "Jalapeño Flavoured Pizza Mozzarella Cheese Sticks", "price": 6.49, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hcb/h6f/14321352572958.jpg", "source": "" },
+    { "name": "Cheddar Flavoured Pizza Mozzarella Cheese Sticks", "price": 6.49, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hf2/h03/14321321181214.jpg", "source": "" },
+    { "name": "Marble Pizza Mozzarella Cheese Sticks With Probiotics", "price": 6.49, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hf1/h83/14321343201310.jpg", "source": "" },
+    { "name": "Frozen Bacon And Cheddar Battered Cheese Sticks", "price": 6.99, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/h49/h52/13384465580062.jpg", "source": "" },
+    { "name": "Frozen Battered Mozzarella And Jalapeño Cheese Sticks", "price": 6.99, "category": "Dairy", "image_url": "https://product-images.metro.ca/images/hde/hec/13384463810590.jpg", "source": "" }
+
+    
+
 ]
