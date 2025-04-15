@@ -17,8 +17,8 @@
 
     <h1 class="mb-4">Our Products</h1>
 
-    <form class="mb-4">
-        <input type="text" class="form-control" placeholder="Search for fruits, veggies, or dairy...">
+    <form class="mb-4" method="GET" action="{{ url_for('routes.products') }}">
+        <input type="text" class="form-control" placeholder="Search for fruits, veggies, or dairy...", value="{{ request.args.get('category', '') }}", name="category">
     </form>
 
     <div class="row">

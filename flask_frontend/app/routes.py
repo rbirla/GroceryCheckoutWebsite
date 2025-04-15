@@ -5,7 +5,6 @@ from app.forms import RegistrationForm, LoginForm
 from app import login_manager, db
 import requests
 
-
 routes_bp = Blueprint('routes', __name__)
 
 @routes_bp.route('/')
@@ -14,8 +13,10 @@ def index():
 
 @routes_bp.route('/products')
 def products():
+    category = request.args.get('category')
     try:
-        response = requests.get("http://localhost:8000/food-items/")
+        params = {"category": category} if category else {}
+        response = requests.get("http://localhost:8000/food-items/", params=params)
         items = response.json()
     except Exception as e:
         print("Failed to fetch items from API:", e)
