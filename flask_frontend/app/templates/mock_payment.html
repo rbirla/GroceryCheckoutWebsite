@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Payment{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+        <h2>Mock Payment Page</h2>
+        <p>This is a placeholder for the payment process.</p>
+        <form id="payment">
+            <div class="mb-3">
+                <label for="cardNumber" class="form-label">Card Number</label>
+                <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="cardName" class="form-label">Cardholder Name</label>
+                <input type="text" class="form-control" id="cardName" name="cardName" placeholder="John Doe" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="expiryDate" class="form-label">Expiry Date</label>
+                    <input type="text" class="form-control" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="cvv" class="form-label">CVV</label>
+                    <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123" required>
+                </div>
+            </div>
+            <button type="button" class="btn btn-success w-100" onclick="validateForm()">Pay $4.99</button>
+        </form>
+        <br>
+        <a href="{{ url_for('routes.dashboard') }}" class="btn btn-primary">Cancel</a>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        const payment_form = document.getElementById('payment');
+
+        if (payment_form.checkValidity()) {
+            alert("Payment Successful! Thank you for your purchase.");
+            window.location.href = "{{ url_for('routes.dashboard') }}";
+        } else {
+            alert("Please fill in all fields.");
+        }
+    }
+</script>
+
+{% endblock %}

@@ -156,3 +156,8 @@ def product_detail(product_id):
     except Exception as e:
         print("❌ Failed to fetch product:", e)
         return "Error loading product", 500
+
+@routes_bp.route('/mock-payment')
+@login_required
+def mock_payment():
+    return render_template('mock_payment.html')

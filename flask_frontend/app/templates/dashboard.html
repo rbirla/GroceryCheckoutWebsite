@@ -7,5 +7,45 @@
     <h1 class="text-center">Welcome, {{ name }}!</h1>
     <p class="text-center">This is your dashboard where you can manage your account and view personalized content.</p>
     <!-- Add more dashboard content here -->
+
+    <div class="text-center mt-4">
+        <a class="btn btn-primary" href="{{ url_for('routes.products') }}">Browse Products</a>
+        <a class="btn btn-success" href="{{ url_for('routes.cart') }}">View Cart</a>
+        <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#subscribeModal">Subscribe</a>
+        <a class="btn btn-danger" href="{{ url_for('routes.logout') }}">Logout</a>
+    </div>
+
+    <!-- Subscribe Modal -->
+    <div class="modal fade" id="subscribeModal" tabindex="-1" aria-labelledby="subscribeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="subscribeModalLabel">Subscribe to LocalHarvest</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Subscribe for only $4.99/week CAD to receive a package of products every week.
+                        <br><br>
+                        You can cancel your subscription at any time. Your subscription will automatically renew every week unless you cancel it.
+                        <br><br>
+                        <strong>Note:</strong> This is a mock subscription process. No actual payment will be processed.
+                        <br><br>
+                        By clicking "Proceed to Payment", you agree to our <strong>Terms of Service</strong> and <strong>Privacy Policy.</strong><br>
+                        We will not store any of your payment information.
+                        <br><br>
+                        <strong>Benefits:</strong>
+                        <ul>
+                            <li>Fresh, locally sourced products delivered to your door.</li>
+                            <li>Support local farmers and businesses.</li>
+                            <li>Flexible subscription options to suit your needs.</li>
+                            <li>Exclusive access to subscriber-only products and discounts.</li>
+                        </ul>
+                    </p>
+                    <a href="{{ url_for('routes.mock_payment') }}" class="btn btn-success">Proceed to Payment</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
