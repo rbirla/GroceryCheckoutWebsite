@@ -2,53 +2,145 @@
 {% block title %}Your Cart{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<style>
+  .cart-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cart-img {
+    max-width: 100px;
+    object-fit: contain;
+    margin-right: 20px;
+  }
+
+  .cart-info {
+    flex-grow: 1;
+  }
+
+  .qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .summary {
+    text-align: right;
+    margin-top: 30px;
+    font-size: 1.1rem;
+  }
+
+  .qty-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    font-size: 18px;
+  }
+
+  .cart-price {
+    font-weight: bold;
+    font-size: 1.1rem;
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .delete-btn {
+    background-color: transparent;
+    border: none;
+    color: red;
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+</style>
+
+<div class="container mt-5">
   <h2 class="mb-4">Your Shopping Cart</h2>
 
   {% if cart_items %}
-    <div class="table-responsive">
-      <table class="table table-bordered align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% set total = 0 %}
-          {% for entry in cart_items %}
-            {% set subtotal = entry.product.price * entry.quantity %}
-            {% set total = total + subtotal %}
-            <tr>
-              <td class="d-flex align-items-center gap-3">
-                <img src="{{ entry.product.image_url }}" alt="{{ entry.product.name }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
-                <strong>{{ entry.product.name }}</strong>
-              </td>
-              <td>${{ '%.2f' | format(entry.product.price) }}</td>
-              <td>{{ entry.quantity }}</td>
-              <td class="fw-bold text-success">${{ '%.2f' | format(subtotal) }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3" class="text-end fw-bold">Total:</td>
-            <td class="fw-bold text-primary">${{ '%.2f' | format(total) }}</td>
-          </tr>
-        </tfoot>
-      </table>
+    <div id="cart-items">
+      {% for item in cart_items %}
+      <div class="cart-card" data-id="{{ item.product.id }}" data-price="{{ item.product.price }}">
+        <button class="delete-btn" onclick="removeFromCart({{ item.product.id }})">&times;</button>
+        <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="cart-img">
+        <div class="cart-info">
+          <h5>{{ item.product.name }}</h5>
+          <p>${{ '%.2f' | format(item.product.price) }} × <span class="qty">{{ item.quantity }}</span></p>
+          <div class="qty-controls">
+            <button class="btn btn-outline-secondary btn-sm qty-btn" onclick="updateQty({{ item.product.id }}, -1)">−</button>
+            <span class="qty-count">{{ item.quantity }}</span>
+            <button class="btn btn-outline-secondary btn-sm qty-btn" onclick="updateQty({{ item.product.id }}, 1)">+</button>
+          </div>
+        </div>
+        <div class="cart-price">
+          $<span class="item-total">{{ '%.2f' | format(item.product.price * item.quantity) }}</span>
+        </div>
+      </div>
+      {% endfor %}
     </div>
 
-    <div class="text-end">
-      <a href="{{ url_for('routes.products') }}" class="btn btn-outline-secondary me-2">Continue Shopping</a>
-      <a href="#" class="btn btn-success">Checkout</a>
-    </div>
+    <div class="summary text-center">
+        <p>Subtotal: $<span id="subtotal">0.00</span></p>
+        <p>+ Tax (13%): $<span id="tax">0.00</span></p>
+        <p class="fw-bold h5">Total: $<span id="total">0.00</span></p>
+        <a href="{{ url_for('routes.checkout') }}" class="btn btn-success mt-3">Proceed to Checkout</a>
+      </div>
+      
   {% else %}
-    <div class="alert alert-info">
-      Your cart is empty. <a href="{{ url_for('routes.products') }}">Browse products</a> to get started!
-    </div>
+    <p class="text-muted mt-4">Your cart is empty.</p>
   {% endif %}
 </div>
+
+<script>
+  function updateTotals() {
+    let subtotal = 0;
+    document.querySelectorAll('.cart-card').forEach(card => {
+      const price = parseFloat(card.dataset.price);
+      const qty = parseInt(card.querySelector('.qty-count').innerText);
+      const itemTotal = price * qty;
+      card.querySelector('.item-total').innerText = itemTotal.toFixed(2);
+      card.querySelector('.qty').innerText = qty;
+      subtotal += itemTotal;
+    });
+
+    const tax = subtotal * 0.13;
+    const total = subtotal + tax;
+    document.getElementById('subtotal').innerText = subtotal.toFixed(2);
+    document.getElementById('tax').innerText = tax.toFixed(2);
+    document.getElementById('total').innerText = total.toFixed(2);
+  }
+
+  function updateQty(productId, delta) {
+    const card = document.querySelector(`.cart-card[data-id='${productId}']`);
+    const countSpan = card.querySelector('.qty-count');
+    let qty = parseInt(countSpan.innerText);
+    qty = Math.max(1, qty + delta);
+    countSpan.innerText = qty;
+    updateTotals();
+
+    fetch(`/update-cart`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ product_id: productId, change: delta })
+    }).catch(err => console.error("Quantity update failed", err));
+  }
+
+  function removeFromCart(productId) {
+    fetch(`/remove-from-cart`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ product_id: productId })
+    })
+    .then(() => location.reload())
+    .catch(err => console.error("Remove failed", err));
+  }
+
+  updateTotals();
+</script>
 {% endblock %}

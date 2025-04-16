@@ -120,21 +120,48 @@ def dashboard():
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@routes_bp.route('/update-cart', methods=['POST'])
+@login_required
+def update_cart():
+    data = request.get_json()
+    product_id = str(data.get('product_id'))
+    change = int(data.get('change'))  # +1 or -1
+
+    cart = session.get('cart', {})
+    if product_id in cart:
+        cart[product_id] = max(1, cart[product_id] + change)
+        session['cart'] = cart
+        session['cart_count'] = sum(cart.values())
+        return jsonify(success=True)
+    return jsonify(success=False)
 
 
 @routes_bp.route('/cart')
 @login_required
 def cart():
     cart = session.get('cart', {})
-    product_ids = [int(pid) for pid in cart.keys()]
-    products = Product.query.filter(Product.id.in_(product_ids)).all()
+    product_ids = list(cart.keys())
 
-    cart_items = []
-    for product in products:
-        quantity = cart[str(product.id)]
-        cart_items.append({"product": product, "quantity": quantity})
+    try:
+        # Fetch all products from FastAPI
+        response = requests.get("http://localhost:8000/food-items/")
+        all_items = response.json()
 
-    return render_template('cart.html', cart_items=cart_items)
+        # Filter items that match the cart
+        cart_items = []
+        for item in all_items:
+            if str(item['id']) in cart:
+                cart_items.append({
+                    "product": item,
+                    "quantity": cart[str(item['id'])]
+                })
+
+        return render_template('cart.html', cart_items=cart_items)
+
+    except Exception as e:
+        print("❌ Failed to fetch cart items:", e)
+        return render_template('cart.html', cart_items=[])
+
 
 
 @routes_bp.route('/products/<int:product_id>')
@@ -157,6 +184,19 @@ def product_detail(product_id):
         print("❌ Failed to fetch product:", e)
         return "Error loading product", 500
 
+@routes_bp.route('/remove-from-cart', methods=['POST'])
+@login_required
+def remove_from_cart():
+    data = request.get_json()
+    product_id = str(data.get('product_id'))
+    cart = session.get('cart', {})
+
+    if product_id in cart:
+        del cart[product_id]
+        session['cart'] = cart
+        session['cart_count'] = sum(cart.values())
+    return jsonify(success=True)
+
 @routes_bp.route('/mock-payment', methods=['GET', 'POST'])
 @login_required
 def mock_payment():
@@ -174,3 +214,10 @@ def unsubscribe():
     db.session.commit()
     flash('You have successfully unsubscribed from our newsletter.', 'info')
     return render_template('dashboard.html', name=current_user.username, subscribed=current_user.subscribed)
+
+@routes_bp.route('/checkout')
+@login_required
+def checkout():
+    session['cart'] = {}
+    session['cart_count'] = 0
+    return render_template("checkout_success.html")

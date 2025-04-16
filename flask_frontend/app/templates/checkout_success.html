@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Checkout Complete{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+  <h2>✅ Thank you for your purchase!</h2>
+  <p>Your cart has been cleared. We hope to see you again soon.</p>
+  <a href="{{ url_for('routes.products') }}" class="btn btn-success mt-3">Continue Shopping</a>
+</div>
+{% endblock %}
