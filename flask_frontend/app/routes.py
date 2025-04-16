@@ -114,7 +114,7 @@ def logout():
 @routes_bp.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html', name=current_user.username)
+    return render_template('dashboard.html', name=current_user.username, subscribed=current_user.subscribed)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -157,7 +157,20 @@ def product_detail(product_id):
         print("❌ Failed to fetch product:", e)
         return "Error loading product", 500
 
-@routes_bp.route('/mock-payment')
+@routes_bp.route('/mock-payment', methods=['GET', 'POST'])
 @login_required
 def mock_payment():
+    if request.method == 'POST':
+        current_user.subscribed = True
+        db.session.commit()
+        flash('You have successfully subscribed to our weekly subscription', 'success')
+        return redirect(url_for('routes.dashboard'))
     return render_template('mock_payment.html')
+
+@routes_bp.route('/unsubscribe', methods=['POST'])
+@login_required
+def unsubscribe():
+    current_user.subscribed = False
+    db.session.commit()
+    flash('You have successfully unsubscribed from our newsletter.', 'info')
+    return render_template('dashboard.html', name=current_user.username, subscribed=current_user.subscribed)

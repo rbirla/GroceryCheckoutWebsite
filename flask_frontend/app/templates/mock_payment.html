@@ -6,7 +6,7 @@
     <div class="col-md-6 col-lg-5">
         <h2>Mock Payment Page</h2>
         <p>This is a placeholder for the payment process.</p>
-        <form id="payment">
+        <form id="payment" method="POST" action="{{ url_for('routes.mock_payment') }}">
             <div class="mb-3">
                 <label for="cardNumber" class="form-label">Card Number</label>
                 <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" required>
@@ -28,7 +28,7 @@
                     <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123" required>
                 </div>
             </div>
-            <button type="button" class="btn btn-success w-100" onclick="validateForm()">Pay $4.99</button>
+            <button type="submit" class="btn btn-success w-100" onclick="validateForm()">Pay $4.99</button>
         </form>
         <br>
         <a href="{{ url_for('routes.dashboard') }}" class="btn btn-primary">Cancel</a>
@@ -41,7 +41,7 @@
 
         if (payment_form.checkValidity()) {
             alert("Payment Successful! Thank you for your purchase.");
-            window.location.href = "{{ url_for('routes.dashboard') }}";
+            payment_form.submit();
         } else {
             alert("Please fill in all fields.");
         }
