@@ -21,3 +21,4 @@ class FoodItem(Base):
 
 
     category = relationship("Category", back_populates="food_items")
+

@@ -1,35 +1,208 @@
 {% extends 'base.html' %}
-
 {% block title %}Products{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Our Products</h1>
+<div class="row">
+  <!-- Filter Sidebar -->
+  <div class="col-md-3">
+    <div class="sidebar">
+      <form id="filterForm" method="GET" action="{{ url_for('routes.products') }}">
+        <div class="accordion" id="filterAccordion">
 
-<<<<<<< HEAD
-<form class="mb-4">
-    <input type="text" class="form-control" placeholder="Search for fruits, veggies, or dairy...">
-</form>
-=======
-    <form class="mb-4" method="GET" action="{{ url_for('routes.products') }}">
-        <input type="text" class="form-control" placeholder="Search for fruits, veggies, or dairy...", value="{{ request.args.get('category', '') }}", name="category">
-    </form>
->>>>>>> 97d79d54bf90b26587a936dc2c34e2252e4d4741
-
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-    {% for item in items %}
-    <div class="col d-flex align-items-stretch">
-        <div class="card shadow-sm w-100">
-            <img src="{{ item.image_url }}" class="card-img-top" alt="{{ item.name }}">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ item.name }}</h5>
-                <p class="card-text text-success fw-bold">${{ '%.2f' | format(item.price) }}</p>
-                {% if item.stock %}
-                <p class="card-text text-muted">Stock: {{ item.stock }}</p>
-                {% endif %}
-                <a href="{{ url_for('routes.product_detail', product_id=item.id) }}" class="btn btn-success mt-auto">View Details</a>
+          <!-- Categories -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingCategory">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory" aria-expanded="true" aria-controls="collapseCategory">
+                Categories
+              </button>
+            </h2>
+            <div id="collapseCategory" class="accordion-collapse collapse show" aria-labelledby="headingCategory">
+              <div class="accordion-body">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="category" value="" {% if not request.args.get('category') %}checked{% endif %}>
+                  <label class="form-check-label text-danger">All*</label>
+                </div>
+                {% for cat in categories %}
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="category" value="{{ cat }}" {% if request.args.get('category') == cat %}checked{% endif %}>
+                  <label class="form-check-label">{{ cat }}</label>
+                </div>
+                {% endfor %}
+              </div>
             </div>
+          </div>
+
+          <!-- Sort By -->
+<div class="accordion-item">
+    <h2 class="accordion-header" id="headingSort">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort" aria-expanded="false" aria-controls="collapseSort">
+        Sort By
+      </button>
+    </h2>
+    <div id="collapseSort" class="accordion-collapse collapse" aria-labelledby="headingSort">
+      <div class="accordion-body">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="sort" value="all" {% if not request.args.get('sort') or request.args.get('sort') == 'all' %}checked{% endif %}>
+          <label class="form-check-label text-danger">All*</label>
         </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="sort" value="alphabetical" {% if request.args.get('sort') == 'alphabetical' %}checked{% endif %}>
+          <label class="form-check-label">Alphabetical</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="sort" value="price_asc" {% if request.args.get('sort') == 'price_asc' %}checked{% endif %}>
+          <label class="form-check-label">Price: Low to High</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="sort" value="price_desc" {% if request.args.get('sort') == 'price_desc' %}checked{% endif %}>
+          <label class="form-check-label">Price: High to Low</label>
+        </div>
+      </div>
     </div>
-    {% endfor %}
+  </div>
+  
+
+          <!-- Ingredients -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingIngredients">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseIngredients" aria-expanded="false" aria-controls="collapseIngredients">
+                Ingredients
+              </button>
+            </h2>
+            <div id="collapseIngredients" class="accordion-collapse collapse" aria-labelledby="headingIngredients">
+              <div class="accordion-body">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="ingredient" value="" {% if not request.args.get('ingredient') %}checked{% endif %}>
+                  <label class="form-check-label text-danger">All*</label>
+                </div>
+                {% for ing in ingredients %}
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="ingredient" value="{{ ing }}" {% if request.args.get('ingredient') == ing %}checked{% endif %}>
+                  <label class="form-check-label">{{ ing }}</label>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="sticky-bottom bg-white pb-3 mt-3 d-grid gap-2">
+          <button type="submit" class="btn btn-success">Apply</button>
+          <a href="{{ url_for('routes.products') }}" class="btn btn-outline-secondary">Reset Filters</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Product Results -->
+  <div class="col-md-9">
+    <!-- Active Filter Summary + Result Count -->
+<div class="mb-3">
+    <h6>{{ items | length }} result{{ '' if items | length == 1 else 's' }} found</h6>
+    <div>
+      <span class="badge bg-secondary me-2">Category: {{ request.args.get('category') or 'All' }}</span>
+      <span class="badge bg-secondary me-2">Ingredient: {{ request.args.get('ingredient') or 'All' }}</span>
+      <span class="badge bg-secondary">Sort: 
+        {% if request.args.get('sort') == 'alphabetical' %}
+          Alphabetical
+        {% elif request.args.get('sort') == 'price_asc' %}
+          Price: Low to High
+        {% elif request.args.get('sort') == 'price_desc' %}
+          Price: High to Low
+        {% else %}
+          All
+        {% endif %}
+      </span>
+    </div>
+  </div>
+  
+    {% if items %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+      {% for item in items %}
+      <div class="col d-flex align-items-stretch">
+        <div class="card shadow-sm w-100">
+          <img src="{{ item.image_url }}" class="card-img-top" alt="{{ item.name }}">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ item.name }}</h5>
+            <p class="card-text text-success fw-bold">${{ '%.2f' | format(item.price) }}</p>
+            {% if item.stock %}
+            <p class="card-text text-muted">Stock: {{ item.stock }}</p>
+            {% endif %}
+            <a href="{{ url_for('routes.product_detail', product_id=item.id) }}" class="btn btn-sm btn-outline-primary mt-2">View Details</a>
+
+{% if current_user.is_authenticated %}
+<button class="btn btn-success w-100 mt-2 add-to-cart-btn" data-id="{{ item.id }}">Add to Cart</button>
+
+{% else %}
+  <button class="btn btn-sm btn-secondary mt-2" onclick="alert('Please log in to add items to your cart.')">Add to Cart</button>
+{% endif %}
+
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <p class="text-danger mt-4">No items matched your filters.</p>
+    {% endif %}
+  </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const filterForm = document.getElementById('filterForm') || document.querySelector('form');
+
+  document.querySelectorAll('.form-check-input').forEach(input => {
+    input.addEventListener('change', () => {
+      filterForm.submit();
+    });
+  });
+</script>
+<script>
+    function addToCart(productId) {
+      fetch(`/add-to-cart/${productId}`, {
+        method: 'POST'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Added to cart!');
+          // Optional: Update cart icon or badge
+        }
+      })
+      .catch(err => {
+        alert('Something went wrong. Please try again.');
+        console.error(err);
+      });
+    }
+    </script>
+
+<script>
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+      button.addEventListener('click', async () => {
+        const productId = button.getAttribute('data-id');
+    
+        const response = await fetch('/add-to-cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            
+          },
+          body: JSON.stringify({ product_id: productId })
+        });
+    
+        const result = await response.json();
+    
+        if (result.success) {
+          location.reload();  // or update the badge dynamically
+        } else {
+          alert(result.message || 'You must be logged in to add items to the cart.');
+        }
+      });
+    });
+    </script>
+    
+    
 {% endblock %}

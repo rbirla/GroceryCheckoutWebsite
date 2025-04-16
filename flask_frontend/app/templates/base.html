@@ -1,51 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}LocalHarvest{% endblock %} - LocalHarvest</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}LocalHarvest{% endblock %} - LocalHarvest</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-    <!-- Custom CSS -->
-    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
+
+  <style>
+    .search-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-check-input:checked + .form-check-label {
+      background-color: #e6f4ea;
+      border-radius: 5px;
+      padding: 2px 8px;
+      font-weight: 500;
+    }
+
+    .search-toggle {
+      background-color: #333333;
+      border: #333333;
+      border-radius: 20%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.3s ease;
+    }
+
+    .search-toggle:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Custom icon styling using class */
+    .search-icon {
+      font-size: 17px;
+      color: #f1f1f1;
+      transition: color 0.3s ease;
+    }
+
+    .search-toggle:hover .search-icon {
+      color: #0056b3;
+    }
+
+    .search-field {
+      width: 0;
+      opacity: 0;
+      padding: 0;
+      transition: width 0.4s ease, opacity 0.3s ease;
+      border: 1px solid #17bdd3;
+      outline: none;
+      border-radius: 25px;
+      height: 40px;
+      font-size: 14px;
+      background-color: #f1f1f1;
+    }
+
+    .search-wrapper.active .search-field {
+      width: 250px;
+      opacity: 1;
+      padding: 0 15px;
+    }
+  </style>
 </head>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('routes.index') }}">LocalHarvest</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="{{ url_for('routes.index') }}">Home</a>
-                <a class="nav-link" href="{{ url_for('routes.products') }}">Products</a>
-                <a class="nav-link" href="{{ url_for('routes.about') }}">About</a>
-                {% if current_user.is_authenticated %}
-                    <a class="nav-link" href="{{ url_for('routes.dashboard') }}">Dashboard</a>
-                    <a class="nav-link" href="{{ url_for('routes.logout') }}">Logout</a>
-                {% else %}
-                    <a class="nav-link" href="{{ url_for('routes.login') }}">Login</a>
-                    <a class="nav-link" href="{{ url_for('routes.register') }}">Register</a>
-                {% endif %}
-            </div>
-        </div>
-    </nav>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <div class="container d-flex align-items-center justify-content-between">
+      <a class="navbar-brand me-3" href="{{ url_for('routes.index') }}">LocalHarvest</a>
 
-    <!-- Main Content -->
-    <div class="container">
-        {% block content %}{% endblock %}
+      <!-- Search -->
+      <form class="d-flex search-wrapper" id="searchWrapper" method="GET" action="{{ url_for('routes.products') }}">
+        <button type="button" class="search-toggle" id="searchToggle">
+          <i class="bi bi-search search-icon"></i>
+        </button>
+        <input
+            type="text"
+            class="search-field"
+            name="search"
+            placeholder="Search for fruits, milk, etc..."
+            value="{{ request.args.get('search', '') }}"
+         />
+
+      </form>
+      <!-- In base.html navbar section -->
+<a class="nav-link position-relative" href="{{ url_for('routes.cart') }}">
+    <i class="bi bi-cart-fill" style="font-size: 1.3rem;"></i>
+    {% if current_user.is_authenticated and session.get('cart_count', 0) > 0 %}
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+        {{ session.get('cart_count') }}
+      </span>
+    {% endif %}
+  </a>
+  
+
+      <!-- Nav Links -->
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="{{ url_for('routes.index') }}">Home</a>
+        <a class="nav-link" href="{{ url_for('routes.products') }}">Products</a>
+        <a class="nav-link" href="{{ url_for('routes.about') }}">About</a>
+        {% if current_user.is_authenticated %}
+          <a class="nav-link" href="{{ url_for('routes.dashboard') }}">Dashboard</a>
+          <a class="nav-link" href="{{ url_for('routes.logout') }}">Logout</a>
+        {% else %}
+          <a class="nav-link" href="{{ url_for('routes.login') }}">Login</a>
+          <a class="nav-link" href="{{ url_for('routes.register') }}">Register</a>
+        {% endif %}
+      </div>
     </div>
+  </nav>
 
-    <!-- Footer -->
-    <footer class="text-center mt-5 mb-3 text-muted">
-        <small>© 2025 LocalHarvest. Built by Team 9 – BTP405 Winter Project.</small>
-    </footer>
+  <!-- Main content -->
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
 
-    <!-- Bootstrap JS (optional) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Footer -->
+  <footer class="text-center mt-5 mb-3 text-muted">
+    <small>© 2025 LocalHarvest. Built by Team 9 – BTP405 Winter Project.</small>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    const toggle = document.getElementById('searchToggle');
+    const wrapper = document.getElementById('searchWrapper');
+
+    toggle.addEventListener('click', () => {
+      wrapper.classList.toggle('active');
+      const input = wrapper.querySelector('.search-field');
+      if (wrapper.classList.contains('active')) {
+        setTimeout(() => input.focus(), 150);
+      } else {
+        input.blur();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!wrapper.contains(e.target) && wrapper.classList.contains('active')) {
+        wrapper.classList.remove('active');
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  {% block scripts %}{% endblock %}
 </body>
-
 </html>
