@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from flask import session, jsonify, request
 from app.models import User, Product
-from app.forms import RegistrationForm, LoginForm
+from app.forms import RegistrationForm, LoginForm, EditProfileForm, EditPaymentForm, EditAddressForm 
 from app import login_manager, db
 import requests
 import random
@@ -83,7 +83,7 @@ def register():
         return redirect(url_for('routes.dashboard'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data)
+        user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -111,10 +111,76 @@ def logout():
     logout_user()
     return redirect(url_for('routes.index'))
 
-@routes_bp.route('/dashboard')
+@routes_bp.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    return render_template('dashboard.html', name=current_user.username, subscribed=current_user.subscribed)
+    cart = session.get('cart', {})
+    product_ids = list(cart.keys())
+
+    try:
+        # Fetch all products from FastAPI
+        response = requests.get("http://localhost:8000/food-items/")
+        all_items = response.json()
+
+        # Filter products that are in the cart
+        cart_items = []
+        for item in all_items:
+            if str(item['id']) in cart:
+                cart_items.append({
+                    "name": item["name"],
+                    "image_url": item["image_url"],
+                    "quantity": cart[str(item["id"])]
+                })
+
+        return render_template('dashboard.html', cart_items=cart_items)
+
+    except Exception as e:
+        print("❌ Failed to fetch dashboard cart items:", e)
+        return render_template('dashboard.html', cart_items=[])
+
+
+
+@routes_bp.route('/edit-profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    personal_form = EditProfileForm(prefix="personal", obj=current_user)
+    payment_form = EditPaymentForm(prefix="payment", obj=current_user)
+    address_form = EditAddressForm(prefix="address", obj=current_user)
+
+    if personal_form.validate_on_submit() and 'personal_submit' in request.form:
+        current_user.first_name = personal_form.first_name.data
+        current_user.last_name = personal_form.last_name.data
+        current_user.email = personal_form.email.data
+        current_user.age = personal_form.age.data
+        current_user.sex = personal_form.sex.data
+        db.session.commit()
+        flash('✅ Personal Info updated!', 'success')
+        return redirect(url_for('routes.edit_profile'))
+
+    if payment_form.validate_on_submit() and 'payment_submit' in request.form:
+        current_user.payment_method = payment_form.payment_method.data
+        db.session.commit()
+        flash('💳 Payment updated!', 'success')
+        return redirect(url_for('routes.edit_profile'))
+
+    if address_form.validate_on_submit() and 'address_submit' in request.form:
+        current_user.street = address_form.street.data
+        current_user.city = address_form.city.data
+        current_user.province = address_form.province.data
+        current_user.country = address_form.country.data
+        current_user.postal_code = address_form.postal_code.data
+        db.session.commit()
+        flash('🏠 Address updated!', 'success')
+        return redirect(url_for('routes.edit_profile'))
+
+    return render_template('edit_profile.html',
+                           personal_form=personal_form,
+                           payment_form=payment_form,
+                           address_form=address_form)
+
+
+
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -221,3 +287,4 @@ def checkout():
     session['cart'] = {}
     session['cart_count'] = 0
     return render_template("checkout_success.html")
+

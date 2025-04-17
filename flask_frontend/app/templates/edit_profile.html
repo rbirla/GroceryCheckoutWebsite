@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card p-4 shadow-sm">
+    <h3 class="text-center fw-bold mb-4">Manage Your Profile</h3>
+
+    <ul class="nav nav-tabs mb-4 justify-content-center" id="profileTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">Personal Info</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab">Payment</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab">Address</button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="profileTabsContent">
+      <!-- Personal Info -->
+      <div class="tab-pane fade show active" id="personal" role="tabpanel">
+        <form method="POST">
+          {{ personal_form.hidden_tag() }}
+          <div class="row mb-3">
+            <div class="col">{{ personal_form.first_name.label }}{{ personal_form.first_name(class="form-control") }}</div>
+            <div class="col">{{ personal_form.last_name.label }}{{ personal_form.last_name(class="form-control") }}</div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">{{ personal_form.email.label }}{{ personal_form.email(class="form-control") }}</div>
+            <div class="col">{{ personal_form.age.label }}{{ personal_form.age(class="form-control") }}</div>
+          </div>
+          <div class="mb-3">{{ personal_form.sex.label }}{{ personal_form.sex(class="form-select") }}</div>
+          <button name="personal_submit" type="submit" class="btn btn-primary">Update Personal Info</button>
+        </form>
+      </div>
+
+      <!-- Payment -->
+      <div class="tab-pane fade" id="payment" role="tabpanel">
+        <form method="POST">
+          {{ payment_form.hidden_tag() }}
+          <div class="mb-3">{{ payment_form.payment_method.label }}{{ payment_form.payment_method(class="form-control", placeholder="XXXX-XXXX-XXXX-1234") }}</div>
+          <button name="payment_submit" type="submit" class="btn btn-primary">Update Payment</button>
+        </form>
+      </div>
+
+      <!-- Address -->
+      <div class="tab-pane fade" id="address" role="tabpanel">
+        <form method="POST">
+          {{ address_form.hidden_tag() }}
+          <div class="mb-3">{{ address_form.street.label }}{{ address_form.street(class="form-control") }}</div>
+          <div class="row mb-3">
+            <div class="col">{{ address_form.city.label }}{{ address_form.city(class="form-control") }}</div>
+            <div class="col">{{ address_form.province.label }}{{ address_form.province(class="form-control") }}</div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">{{ address_form.country.label }}{{ address_form.country(class="form-control") }}</div>
+            <div class="col">{{ address_form.postal_code.label }}{{ address_form.postal_code(class="form-control") }}</div>
+          </div>
+          <button name="address_submit" type="submit" class="btn btn-primary">Update Address</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
