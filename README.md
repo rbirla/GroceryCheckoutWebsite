@@ -1,5 +1,5 @@
 **Course:** BTP405 – Winter 2025  
-**Instructor:**Hina Tariq
+**Instructor:** Hina Tariq
 **Due Date:** Week of April 15  
 **Team:** Group 9
 
