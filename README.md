@@ -1,5 +1,5 @@
 **Course:** BTP405 – Winter 2025  
-**Instructors:** Prof. Eden Burton, Prof. Hina Tariq, Prof. Mazier Sojoudian  
+**Instructor:**Hina Tariq
 **Due Date:** Week of April 15  
 **Team:** Group 9
 
