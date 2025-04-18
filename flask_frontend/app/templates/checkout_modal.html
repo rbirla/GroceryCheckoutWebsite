@@ -1,0 +1,65 @@
+<!-- Checkout Modal -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content rounded-4">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="checkoutModalLabel">Checkout</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="checkoutForm" method="POST" action="{{ url_for('routes.process_checkout') }}">
+            <h6 class="fw-bold mb-3">Billing Address</h6>
+            <div class="row">
+             
+              <div class="col-md-6 mb-3">
+                <input type="text" class="form-control" name="first_name" value="{{ current_user.first_name }}" placeholder="First Name">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" class="form-control" name="last_name" value="{{ current_user.last_name }}" placeholder="Last Name">
+              </div>
+              <div class="col-md-12 mb-3">
+                <input type="email" class="form-control" name="email" value="{{ current_user.email }}" placeholder="Email">
+              </div>
+              <div class="col-md-12 mb-3">
+                <input type="text" class="form-control" name="street" value="{{ current_user.street }}" placeholder="Street Address">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" class="form-control" name="city" value="{{ current_user.city }}" placeholder="City">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" class="form-control" name="province" value="{{ current_user.province }}" placeholder="Province">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" class="form-control" name="postal_code" value="{{ current_user.postal_code }}" placeholder="Postal Code">
+              </div>
+            </div>
+  
+            <hr>
+            <h6 class="fw-bold mb-3">Payment Method</h6>
+            {% set default_card = saved_cards|selectattr("is_default")|first %}
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <strong id="selectedCardDisplay">
+                  {{ default_card.brand|capitalize }} ending in {{ default_card.last4 }}<br>
+                  <small class="text-muted">Name on card: {{ default_card.name or "N/A" }}</small>
+                </strong>
+              </div>
+              <div>
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#savedCardsModal" onclick="setCardSelectionMode(true)">
+                  Choose Card
+                </button>
+              </div>
+            </div>
+  
+         
+            <input type="hidden" name="selected_card" id="selectedCardId" value="{{ default_card.id }}">
+  
+            <div class="text-end">
+              <button type="submit" class="btn btn-warning px-4">Confirm & Pay</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -3,95 +3,272 @@
 
 {% block content %}
 <style>
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .top-bar a {
+    font-size: 0.95rem;
+    color: #888;
+    text-decoration: none;
+  }
+
+  .top-bar .item-count,
+  .top-bar .help {
+    font-size: 0.95rem;
+    color: #999;
+  }
+
+  .divider {
+    border-top: 1px solid #ddd;
+    margin-bottom: 1.5rem;
+  }
+
   .cart-card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: #fff;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, #fdfdfd, #f7f7f7);
+    border: 1px solid #ddd;
+  }
+
+  .delete {
+    flex: 0 0 40px;
+    text-align: left;
+    padding-left: 5px;
+  }
+
+  .delete button {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: red;
+    cursor: pointer;
   }
 
   .cart-img {
-    max-width: 100px;
-    object-fit: contain;
-    margin-right: 20px;
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin: 0 20px;
   }
 
   .cart-info {
-    flex-grow: 1;
-  }
-
-  .qty-controls {
+    flex: 2;
     display: flex;
     align-items: center;
-    gap: 10px;
   }
 
-  .summary {
-    text-align: right;
-    margin-top: 30px;
-    font-size: 1.1rem;
+  .cart-details strong {
+    font-size: 17px;
   }
 
-  .qty-btn {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    font-size: 18px;
+  .cart-details .text-muted {
+    font-size: 0.85rem;
+    color: #999;
+    display: block;
+    margin-top: 1px;
   }
 
-  .cart-price {
+  .cart-details .italic {
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  .price, .qty, .total {
+    flex: 1;
+    text-align: center;
+  }
+
+  .price .label,
+  .qty .label,
+  .total .label {
+    font-size: 0.85rem;
+    color: #999;
+    margin-bottom: 4px;
+  }
+
+  .price .value,
+  .total .value {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .qty input[type="number"] {
+    width: 55px;
+    text-align: center;
+    padding: 3px 6px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    appearance: auto;
+  }
+
+  .summary-section {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    height: fit-content;
+  }
+
+  .summary-title {
     font-weight: bold;
     font-size: 1.1rem;
-    min-width: 80px;
-    text-align: right;
+    margin-bottom: 20px;
   }
 
-  .delete-btn {
-    background-color: transparent;
+  .checkout-btn {
+    margin-top: 20px;
+    width: 100%;
+    background-color: #f2c76e;
     border: none;
-    color: red;
-    font-size: 20px;
-    margin-right: 10px;
-    cursor: pointer;
+    padding: 12px;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 5px;
+    color: black;
   }
 </style>
 
 <div class="container mt-5">
-  <h2 class="mb-4">Your Shopping Cart</h2>
+  <h2 class="mb-3">Your Cart</h2>
+  <div class="top-bar">
+    <a href="{{ url_for('routes.products') }}">← Continue Shopping</a>
+    <div class="item-count">
+      {{ cart_items | sum(attribute='quantity') }} Item{{ '' if cart_items | sum(attribute='quantity') == 1 else 's' }}
+    </div>
+    <div class="help">Need Help? Call (800) 946-3482</div>
+  </div>
+  <div class="divider"></div>
 
   {% if cart_items %}
-    <div id="cart-items">
+  <div class="row">
+    <div class="col-md-8">
       {% for item in cart_items %}
       <div class="cart-card" data-id="{{ item.product.id }}" data-price="{{ item.product.price }}">
-        <button class="delete-btn" onclick="removeFromCart({{ item.product.id }})">&times;</button>
-        <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="cart-img">
+        <div class="delete">
+          <button onclick="removeFromCart('{{ item.product.id }}')">&times;</button>
+        </div>
         <div class="cart-info">
-          <h5>{{ item.product.name }}</h5>
-          <p>${{ '%.2f' | format(item.product.price) }} × <span class="qty">{{ item.quantity }}</span></p>
-          <div class="qty-controls">
-            <button class="btn btn-outline-secondary btn-sm qty-btn" onclick="updateQty({{ item.product.id }}, -1)">−</button>
-            <span class="qty-count">{{ item.quantity }}</span>
-            <button class="btn btn-outline-secondary btn-sm qty-btn" onclick="updateQty({{ item.product.id }}, 1)">+</button>
+          <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="cart-img">
+          <div class="cart-details">
+            <strong>{{ item.product.name }}</strong>
+            <span class="text-muted">ID: {{ item.product.id }}</span>
+            <span class="text-muted italic">In Stock</span>
           </div>
         </div>
-        <div class="cart-price">
-          $<span class="item-total">{{ '%.2f' | format(item.product.price * item.quantity) }}</span>
+        <div class="price">
+          <div class="label">Each</div>
+          <div class="value">${{ '%.2f' | format(item.product.price) }}</div>
+        </div>
+        <div class="qty">
+          <div class="label">Qty</div>
+          <input type="number" class="form-control form-control-sm qty-input"
+                 min="1" value="{{ item.quantity }}"
+                 onchange="updateQty('{{ item.product.id }}', this.value)">
+        </div>
+        <div class="total">
+          <div class="label">Total</div>
+          <div class="value">$<span class="item-total">{{ '%.2f' | format(item.product.price * item.quantity) }}</span></div>
         </div>
       </div>
       {% endfor %}
     </div>
 
-    <div class="summary text-center">
+    <div class="col-md-4">
+      <div class="summary-section">
+        <div class="summary-title">Order Summary</div>
         <p>Subtotal: $<span id="subtotal">0.00</span></p>
-        <p>+ Tax (13%): $<span id="tax">0.00</span></p>
-        <p class="fw-bold h5">Total: $<span id="total">0.00</span></p>
-        <a href="{{ url_for('routes.checkout') }}" class="btn btn-success mt-3">Proceed to Checkout</a>
+        <p>Estimated Sales Tax (13%): $<span id="tax">0.00</span></p>
+        <p class="fw-bold">Estimated Total: $<span id="total">0.00</span></p>
+        {% if session.get('cart') %}
+        <button class="btn btn-warning w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#checkoutModal">CHECKOUT</button>
+        {% else %}
+      <button class="btn btn-warning w-100 fw-bold" onclick="alert('🛒 You must have at least one item in your cart.')">CHECKOUT</button>
+      {% endif %}
+      <p><strong>DEBUG:</strong> Saved Cards Count = {{ saved_cards|length }}</p>
+
+        <!-- Checkout Modal -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('routes.process_checkout') }}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="checkoutModalLabel">Checkout</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h6 class="mb-3">Billing Address</h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label>First Name</label>
+              <input name="first_name" class="form-control" value="{{ current_user.first_name }}">
+            </div>
+            <div class="col-md-6">
+              <label>Last Name</label>
+              <input name="last_name" class="form-control" value="{{ current_user.last_name }}">
+            </div>
+            <div class="col-md-6">
+              <label>Email</label>
+              <input name="email" class="form-control" value="{{ current_user.email }}">
+            </div>
+            <div class="col-md-6">
+              <label>Phone</label>
+              <input name="phone" class="form-control" placeholder="+1 555 555 5555">
+            </div>
+            <div class="col-md-6">
+              <label>Street</label>
+              <input name="street" class="form-control" value="{{ current_user.street }}">
+            </div>
+            <div class="col-md-6">
+              <label>City</label>
+              <input name="city" class="form-control" value="{{ current_user.city }}">
+            </div>
+            <div class="col-md-4">
+              <label>Province</label>
+              <input name="province" class="form-control" value="{{ current_user.province }}">
+            </div>
+            <div class="col-md-4">
+              <label>Country</label>
+              <input name="country" class="form-control" value="{{ current_user.country }}">
+            </div>
+            <div class="col-md-4">
+              <label>Postal Code</label>
+              <input name="postal_code" class="form-control" value="{{ current_user.postal_code }}">
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <h6 class="mb-3">Payment Method</h6>
+          {% for card in saved_cards %}
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="selected_card" id="card{{ card.id }}" value="{{ card.id }}" {% if card.is_default %}checked{% endif %}>
+            <label class="form-check-label" for="card{{ card.id }}">
+              •••• {{ card.last4 }} ({{ card.brand|capitalize }}) {% if card.is_default %}<strong class="text-success">(Default)</strong>{% endif %}
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Confirm Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
       </div>
-      
+    </div>
+  </div>
   {% else %}
     <p class="text-muted mt-4">Your cart is empty.</p>
   {% endif %}
@@ -102,10 +279,9 @@
     let subtotal = 0;
     document.querySelectorAll('.cart-card').forEach(card => {
       const price = parseFloat(card.dataset.price);
-      const qty = parseInt(card.querySelector('.qty-count').innerText);
+      const qty = parseInt(card.querySelector('.qty-input').value);
       const itemTotal = price * qty;
       card.querySelector('.item-total').innerText = itemTotal.toFixed(2);
-      card.querySelector('.qty').innerText = qty;
       subtotal += itemTotal;
     });
 
@@ -116,25 +292,21 @@
     document.getElementById('total').innerText = total.toFixed(2);
   }
 
-  function updateQty(productId, delta) {
-    const card = document.querySelector(`.cart-card[data-id='${productId}']`);
-    const countSpan = card.querySelector('.qty-count');
-    let qty = parseInt(countSpan.innerText);
-    qty = Math.max(1, qty + delta);
-    countSpan.innerText = qty;
-    updateTotals();
-
+  function updateQty(productId, newQty) {
+    newQty = Math.max(1, parseInt(newQty));
     fetch(`/update-cart`, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ product_id: productId, change: delta })
-    }).catch(err => console.error("Quantity update failed", err));
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_id: productId, change: newQty })
+    })
+    .then(() => updateTotals())
+    .catch(err => console.error("Quantity update failed", err));
   }
 
   function removeFromCart(productId) {
     fetch(`/remove-from-cart`, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ product_id: productId })
     })
     .then(() => location.reload())
