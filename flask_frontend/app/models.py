@@ -10,10 +10,9 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
-    email = db.Column(db.String(120), nullable=False)  # no unique=True here
+    email = db.Column(db.String(120), nullable=False)  
     age = db.Column(db.Integer)
     sex = db.Column(db.String(10))
-    payment_method = db.Column(db.String(100))  # imaginary credit card
     street = db.Column(db.String(150))
     city = db.Column(db.String(100))
     province = db.Column(db.String(100))
@@ -21,6 +20,14 @@ class User(UserMixin, db.Model):
     postal_code = db.Column(db.String(20))
     subscribed = db.Column(db.Boolean, default=False)
     password_hash = db.Column(db.String(150), nullable=False)
+    cardholder_first = db.Column(db.String(150))
+    cardholder_last = db.Column(db.String(150))
+    card_number = db.Column(db.String(19))  
+    expiration_date = db.Column(db.String(5))  
+    cvv = db.Column(db.String(3))  
+    card_type = db.Column(db.String(10)) 
+    set_primary = db.Column(db.Boolean, default=False)
+
 
     __table_args__ = (
         UniqueConstraint('email', name='uq_user_email'),
@@ -39,3 +46,15 @@ class Product(db.Model):
     price = db.Column(db.String(20), nullable=False)
     description = db.Column(db.String(500), nullable=False)
     image_url = db.Column(db.String(200), nullable=False)
+
+
+class Card(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    last4 = db.Column(db.String(4))
+    brand = db.Column(db.String(20))
+    is_default = db.Column(db.Boolean, default=False)
+    logo_url = db.Column(db.String(200))
+   
+
+    user = db.relationship("User", backref="cards")

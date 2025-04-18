@@ -188,7 +188,84 @@
         <p>Subtotal: $<span id="subtotal">0.00</span></p>
         <p>Estimated Sales Tax (13%): $<span id="tax">0.00</span></p>
         <p class="fw-bold">Estimated Total: $<span id="total">0.00</span></p>
-        <a href="{{ url_for('routes.checkout') }}" class="checkout-btn">CHECKOUT</a>
+        {% if session.get('cart') %}
+        <button class="btn btn-warning w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#checkoutModal">CHECKOUT</button>
+        {% else %}
+      <button class="btn btn-warning w-100 fw-bold" onclick="alert('🛒 You must have at least one item in your cart.')">CHECKOUT</button>
+      {% endif %}
+      <p><strong>DEBUG:</strong> Saved Cards Count = {{ saved_cards|length }}</p>
+
+        <!-- Checkout Modal -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('routes.process_checkout') }}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="checkoutModalLabel">Checkout</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h6 class="mb-3">Billing Address</h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label>First Name</label>
+              <input name="first_name" class="form-control" value="{{ current_user.first_name }}">
+            </div>
+            <div class="col-md-6">
+              <label>Last Name</label>
+              <input name="last_name" class="form-control" value="{{ current_user.last_name }}">
+            </div>
+            <div class="col-md-6">
+              <label>Email</label>
+              <input name="email" class="form-control" value="{{ current_user.email }}">
+            </div>
+            <div class="col-md-6">
+              <label>Phone</label>
+              <input name="phone" class="form-control" placeholder="+1 555 555 5555">
+            </div>
+            <div class="col-md-6">
+              <label>Street</label>
+              <input name="street" class="form-control" value="{{ current_user.street }}">
+            </div>
+            <div class="col-md-6">
+              <label>City</label>
+              <input name="city" class="form-control" value="{{ current_user.city }}">
+            </div>
+            <div class="col-md-4">
+              <label>Province</label>
+              <input name="province" class="form-control" value="{{ current_user.province }}">
+            </div>
+            <div class="col-md-4">
+              <label>Country</label>
+              <input name="country" class="form-control" value="{{ current_user.country }}">
+            </div>
+            <div class="col-md-4">
+              <label>Postal Code</label>
+              <input name="postal_code" class="form-control" value="{{ current_user.postal_code }}">
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <h6 class="mb-3">Payment Method</h6>
+          {% for card in saved_cards %}
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="selected_card" id="card{{ card.id }}" value="{{ card.id }}" {% if card.is_default %}checked{% endif %}>
+            <label class="form-check-label" for="card{{ card.id }}">
+              •••• {{ card.last4 }} ({{ card.brand|capitalize }}) {% if card.is_default %}<strong class="text-success">(Default)</strong>{% endif %}
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Confirm Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
       </div>
     </div>
   </div>

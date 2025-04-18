@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from flask import session, jsonify, request
-from app.models import User, Product
+from app.models import User, Product, Card
 from app.forms import RegistrationForm, LoginForm, EditProfileForm, EditPaymentForm, EditAddressForm 
 from app import login_manager, db
 import requests
@@ -26,7 +26,7 @@ def add_to_cart():
     cart = session.get('cart', {})
     product_id_str = str(product_id)
 
-    # Increment quantity or add new product
+   
     cart[product_id_str] = cart.get(product_id_str, 0) + 1
     session['cart'] = cart
     session['cart_count'] = sum(cart.values())
@@ -40,7 +40,7 @@ def products():
     category = request.args.get('category', '').strip()
     ingredient = request.args.get('ingredient', '').strip()
     sort = request.args.get('sort', '').strip()
-    search = request.args.get('search', '').strip()  # <-- NEW
+    search = request.args.get('search', '').strip() 
 
     params = {}
     if category:
@@ -50,7 +50,7 @@ def products():
     if sort:
         params["sort"] = sort
     if search:
-        params["search"] = search  # <-- Pass it to FastAPI
+        params["search"] = search  
 
     try:
         response = requests.get("http://localhost:8000/food-items/", params=params)
@@ -118,11 +118,11 @@ def dashboard():
     product_ids = list(cart.keys())
 
     try:
-        # Fetch all products from FastAPI
+     
         response = requests.get("http://localhost:8000/food-items/")
         all_items = response.json()
 
-        # Filter products that are in the cart
+        
         cart_items = []
         for item in all_items:
             if str(item['id']) in cart:
@@ -138,14 +138,49 @@ def dashboard():
         print("❌ Failed to fetch dashboard cart items:", e)
         return render_template('dashboard.html', cart_items=[])
 
+@routes_bp.route('/delete-card', methods=['POST'])
+@login_required
+def delete_card():
+    data = request.get_json()
+    card_id = data.get('card_id')
+
+    card = Card.query.filter_by(id=card_id, user_id=current_user.id).first()
+    if card:
+        db.session.delete(card)
+        db.session.commit()
+        return jsonify(success=True)
+    return jsonify(success=False), 404
+
+
+@routes_bp.route('/set-default-card', methods=['POST'])
+@login_required
+def set_default_card():
+    data = request.get_json()
+    card_id = data.get('card_id')
+
+  
+    card = Card.query.filter_by(id=card_id, user_id=current_user.id).first()
+    if not card:
+        return jsonify(success=False), 404
+
+
+    Card.query.filter_by(user_id=current_user.id).update({'is_default': False})
+    card.is_default = True
+    db.session.commit()
+
+    return jsonify(success=True)
+
 
 
 @routes_bp.route('/edit-profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
     personal_form = EditProfileForm(prefix="personal", obj=current_user)
-    payment_form = EditPaymentForm(prefix="payment", obj=current_user)
+    payment_form = EditPaymentForm(prefix="payment")
+    payment_form.card_number.data = ''  # Always clear this field
+
     address_form = EditAddressForm(prefix="address", obj=current_user)
+
 
     if personal_form.validate_on_submit() and 'personal_submit' in request.form:
         current_user.first_name = personal_form.first_name.data
@@ -155,15 +190,58 @@ def edit_profile():
         current_user.sex = personal_form.sex.data
         db.session.commit()
         flash('✅ Personal Info updated!', 'success')
-        return redirect(url_for('routes.edit_profile'))
+        return redirect(url_for('routes.edit_profile', tab='personal'))
+    
+    if request.method == 'POST':
+        print("🔁 Form POST received")
+        print("✅ Form valid:", payment_form.validate_on_submit())
+        print("🧾 Form errors:", payment_form.errors)
+        print("🧾 Raw form data:", request.form)
+        print("🔐 User ID:", current_user.id)
+
+
+ 
+    if request.method == 'POST' and 'payment_submit' in request.form:
+        raw_number = request.form.get('payment-card_number', '').replace(" ", "")
+        payment_form.card_number.data = raw_number 
+
+        print("✅ Form valid:", payment_form.validate_on_submit())
+        print("🧾 Form errors:", payment_form.errors)
 
     if payment_form.validate_on_submit() and 'payment_submit' in request.form:
-        current_user.payment_method = payment_form.payment_method.data
-        db.session.commit()
-        flash('💳 Payment updated!', 'success')
-        return redirect(url_for('routes.edit_profile'))
+        card_number = payment_form.card_number.data.replace(" ", "")
+        brand = ""
+        logo_url = ""
 
-    if address_form.validate_on_submit() and 'address_submit' in request.form:
+        if card_number.startswith("4"):
+            brand = "visa"
+            logo_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Old_Visa_Logo.svg/250px-Old_Visa_Logo.svg.png"
+        elif card_number.startswith("5"):
+            brand = "mastercard"
+            logo_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/MasterCard_1979_logo.svg/250px-MasterCard_1979_logo.svg.png"
+        elif card_number.startswith("3"):
+            brand = "amex"
+            logo_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/1200px-American_Express_logo_%282018%29.svg.png"
+
+        
+        if payment_form.set_primary.data:
+            Card.query.filter_by(user_id=current_user.id).update({'is_default': False})
+
+        new_card = Card(
+            user_id=current_user.id,
+            last4=card_number[-4:],
+            brand=brand,
+            logo_url=logo_url,
+            is_default=payment_form.set_primary.data
+        )
+        db.session.add(new_card)
+        db.session.commit()
+
+        flash('💳 New card added!', 'success')
+        return redirect(url_for('routes.edit_profile', tab='payment'))
+
+    
+    if address_form.validate_on_submit() and 'address-submit' in request.form:
         current_user.street = address_form.street.data
         current_user.city = address_form.city.data
         current_user.province = address_form.province.data
@@ -171,12 +249,24 @@ def edit_profile():
         current_user.postal_code = address_form.postal_code.data
         db.session.commit()
         flash('🏠 Address updated!', 'success')
-        return redirect(url_for('routes.edit_profile'))
+        return redirect(url_for('routes.edit_profile', tab='address'))
 
-    return render_template('edit_profile.html',
-                           personal_form=personal_form,
-                           payment_form=payment_form,
-                           address_form=address_form)
+   
+    saved_cards = Card.query.filter_by(user_id=current_user.id).order_by(Card.is_default.desc()).all()
+
+
+    return render_template(
+        'edit_profile.html',
+        personal_form=personal_form,
+        payment_form=payment_form,
+        address_form=address_form,
+        active_tab=request.args.get('tab', 'personal'),
+        saved_cards=saved_cards
+    )
+
+
+    
+
 
 
 
@@ -191,7 +281,7 @@ def load_user(user_id):
 def update_cart():
     data = request.get_json()
     product_id = str(data.get('product_id'))
-    change = int(data.get('change'))  # +1 or -1
+    change = int(data.get('change'))  
 
     cart = session.get('cart', {})
     if product_id in cart:
@@ -209,11 +299,9 @@ def cart():
     product_ids = list(cart.keys())
 
     try:
-        # Fetch all products from FastAPI
         response = requests.get("http://localhost:8000/food-items/")
         all_items = response.json()
 
-        # Filter items that match the cart
         cart_items = []
         for item in all_items:
             if str(item['id']) in cart:
@@ -222,11 +310,15 @@ def cart():
                     "quantity": cart[str(item['id'])]
                 })
 
-        return render_template('cart.html', cart_items=cart_items)
+        saved_cards = Card.query.filter_by(user_id=current_user.id).order_by(Card.is_default.desc()).all()
+
+        return render_template('cart.html', cart_items=cart_items, saved_cards=saved_cards, checkout_mode=True)
+
 
     except Exception as e:
         print("❌ Failed to fetch cart items:", e)
-        return render_template('cart.html', cart_items=[])
+        return render_template('cart.html', cart_items=[], saved_cards=[])
+
 
 
 
@@ -281,10 +373,64 @@ def unsubscribe():
     flash('You have successfully unsubscribed from our newsletter.', 'info')
     return render_template('dashboard.html', name=current_user.username, subscribed=current_user.subscribed)
 
-@routes_bp.route('/checkout')
+@routes_bp.route('/checkout', methods=['GET'])
 @login_required
 def checkout():
+    cart = session.get('cart', {})
+    if not cart or sum(cart.values()) == 0:
+        flash("❌ You must have at least one item in your cart to proceed to checkout.", "danger")
+        return redirect(url_for('routes.cart'))
+
+  
+    saved_cards = Card.query.filter_by(user_id=current_user.id).order_by(Card.is_default.desc()).all()
+
+    return render_template(
+        'checkout_modal.html',
+        saved_cards=saved_cards,
+        user=current_user
+    )
+
+
+@routes_bp.route('/process-checkout', methods=['POST'])
+@login_required
+def process_checkout():
+  
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+    street = request.form.get('street')
+    city = request.form.get('city')
+    province = request.form.get('province')
+    country = request.form.get('country')
+    postal_code = request.form.get('postal_code')
+    card_id = request.form.get('selected_card')
+
+  
+    selected_card = Card.query.filter_by(id=card_id, user_id=current_user.id).first()
+    if not selected_card:
+        flash("❌ Invalid card selected.", "danger")
+        return redirect(url_for('routes.cart'))
+
+ 
+    cart = session.get('cart', {})
+    if not cart or sum(cart.values()) == 0:
+        flash("❌ Your cart is empty. Please add items before checkout.", "warning")
+        return redirect(url_for('routes.cart'))
+
+   
+    print("✅ Order Summary:")
+    print("Name:", first_name, last_name)
+    print("Email:", email)
+    print("Shipping to:", street, city, province, postal_code, country)
+    print("Card used:", selected_card.brand, "••••", selected_card.last4)
+
+  
     session['cart'] = {}
     session['cart_count'] = 0
-    return render_template("checkout_success.html")
+
+    flash("🎉 Order placed successfully!", "success")
+    return render_template('checkout_success.html')
+
+
 
