@@ -1,8 +1,6 @@
 
 
-## System Architecture
 
-![Architecture Diagram](docs/architecture.png) 
 
 **Frontend:**
 - HTML5 + Bootstrap 5
