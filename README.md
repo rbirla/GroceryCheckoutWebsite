@@ -1,9 +1,4 @@
-**Course:** BTP405 – Winter 2025  
-**Instructor:** Hina Tariq
-**Due Date:** Week of April 15  
-**Team:** Group 9
 
----
 
 ## System Architecture
 
@@ -98,18 +93,5 @@ Access the app at: `http://127.0.0.1:5000`
 
 ---
 
-## 🔮 Future Work
 
-- Add persistent cart using user database
-- Implement real-time stock tracking
-- Integrate Stripe for real checkout
-- User order history and saved addresses
-- Admin dashboard to manage products
-
----
-
-## 📎 Reference Artifacts
-- Architecture diagram (draw.io)
-- Product backlog (JIRA or Trello link)
-- Code documentation (Python docstrings throughout)
 
