@@ -51,8 +51,8 @@
 ## 🛠️ Running the App Locally
 
 ```bash
-git clone https://github.com/yourgroup/localharvest.git
-cd localharvest
+git clone https://github.com/rbirla/GroceryCheckoutWebsite.git
+cd GroceryCheckoutWebsite
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt

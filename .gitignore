@@ -8,3 +8,7 @@ __pycache__/
 
 # Ignore Python compiled files
 *.pyc
+
+# Local user database and secrets
+flask_frontend/instance/
+.env
