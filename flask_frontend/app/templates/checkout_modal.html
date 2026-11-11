@@ -36,7 +36,9 @@
   
             <hr>
             <h6 class="fw-bold mb-3">Payment Method</h6>
-            {% set default_card = saved_cards|selectattr("is_default")|first %}
+            {% set default_cards = saved_cards|selectattr("is_default")|list %}
+            {% set default_card = default_cards[0] if default_cards else (saved_cards[0] if saved_cards else none) %}
+            {% if default_card %}
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div>
                 <strong id="selectedCardDisplay">
@@ -57,6 +59,12 @@
             <div class="text-end">
               <button type="submit" class="btn btn-warning px-4">Confirm & Pay</button>
             </div>
+            {% else %}
+            <div class="alert alert-warning mb-3">
+              You don't have a saved card yet.
+              <a href="{{ url_for('routes.edit_profile', tab='payment') }}" class="alert-link">Add one in your profile</a> to check out.
+            </div>
+            {% endif %}
           </form>
         </div>
       </div>

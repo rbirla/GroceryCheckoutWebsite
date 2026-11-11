@@ -1,6 +1,12 @@
+# LocalHarvest
 
+A grocery store web app built as a team project at Seneca Polytechnic (2025). Shoppers can browse and filter products, manage a cart, save payment cards and addresses, and go through a mock checkout.
 
+It runs as two services:
+- **`fastapi_backend/`** serves the product catalogue as a REST API (FastAPI + SQLAlchemy + SQLite).
+- **`flask_frontend/`** is the website itself. It calls the API for product data and handles accounts, the cart and checkout (Flask + Jinja2 + Bootstrap).
 
+## Tech Stack
 
 **Frontend:**
 - HTML5 + Bootstrap 5
@@ -43,23 +49,41 @@
 
 ---
 
-
-
-
----
-
 ## 🛠️ Running the App Locally
+
+You need Python 3.10 or newer (tested on 3.13). The two services run in separate terminals.
+
+**1. Clone the repo**
 
 ```bash
 git clone https://github.com/rbirla/GroceryCheckoutWebsite.git
 cd GroceryCheckoutWebsite
+```
+
+**2. Start the product API (terminal 1)**
+
+```bash
+cd fastapi_backend
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+venv\Scripts\activate        # macOS/Linux: source venv/bin/activate
 pip install -r requirements.txt
+uvicorn main:app --port 8000
+```
+
+The product catalogue (`localharvest.db`) is included, so the API has data right away. You can check it at `http://127.0.0.1:8000/food-items/`.
+
+**3. Start the website (terminal 2)**
+
+```bash
+cd flask_frontend
+python -m venv venv
+venv\Scripts\activate        # macOS/Linux: source venv/bin/activate
+pip install -r requirements.txt
+copy .env.example .env         # macOS/Linux: cp .env.example .env
 python run.py
 ```
 
-Access the app at: `http://127.0.0.1:5000`
+Open `http://127.0.0.1:5000`, register an account, and add a card under **Edit Profile → Payment** before checking out. Payments are mocked, so use a test number like `4242 4242 4242 4242`, never a real card.
 
 ---
 
